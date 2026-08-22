@@ -1,392 +1,316 @@
 import streamlit as st
-import pandas as pd
 import joblib
+import numpy as np
 
+# Load models
+linear_model = joblib.load("linear_regression_model.pkl")
+linear_scaler = joblib.load("linear_scaler.pkl")
 
-st.set_page_config(
-    page_title="Employee Attrition Prediction",
-    page_icon="👨‍💼",
-    layout="wide"
+logistic_model = joblib.load("logistic_regression_model.pkl")
+logistic_scaler = joblib.load("logistic_scaler.pkl")
+
+knn_model = joblib.load("knn_model.pkl")
+knn_scaler = joblib.load("knn_scaler.pkl")
+
+naive_model = joblib.load("naive_bayes_model.pkl")
+naive_scaler = joblib.load("naive_scaler.pkl")
+
+st.title("Session 23 - Machine Learning Models")
+
+model_name = st.selectbox(
+    "Select Model",
+    ["Linear Regression", "Logistic Regression", "KNN", "Naive Bayes"]
 )
 
-model = joblib.load("employee_attrition_model.pkl")
-scaler = joblib.load("employee_attrition_scaler.pkl")
-columns = joblib.load("employee_columns.pkl")
-encoders = joblib.load("employee_encoders.pkl")
+# ---------------- LINEAR REGRESSION ----------------
 
-st.markdown("""
-<style>
+if model_name == "Linear Regression":
 
-.title{
-    text-align:center;
-    font-size:40px;
-    font-weight:bold;
-    color:#0E76A8;
-}
+    st.subheader("Linear Regression")
 
-.subtitle{
-    text-align:center;
-    font-size:18px;
-    color:gray;
-}
+    med_inc = st.number_input("MedInc", value=3.0)
+    house_age = st.number_input("HouseAge", value=25.0)
+    ave_rooms = st.number_input("AveRooms", value=5.0)
+    ave_bedrms = st.number_input("AveBedrms", value=1.0)
+    population = st.number_input("Population", value=1000.0)
+    ave_occup = st.number_input("AveOccup", value=3.0)
+    latitude = st.number_input("Latitude", value=35.0)
+    longitude = st.number_input("Longitude", value=-120.0)
 
-.stButton button{
-    width:100%;
-    height:55px;
-    font-size:20px;
-    border-radius:12px;
-}
+    if st.button("Predict"):
 
-</style>
-""", unsafe_allow_html=True)
+        data = np.array([[
+            med_inc,
+            house_age,
+            ave_rooms,
+            ave_bedrms,
+            population,
+            ave_occup,
+            latitude,
+            longitude
+        ]])
 
+        data = linear_scaler.transform(data)
+        prediction = linear_model.predict(data)
 
-st.markdown(
-    "<div class='title'>👨‍💼 Employee Attrition Prediction</div>",
-    unsafe_allow_html=True
-)
-
-st.markdown(
-    "<div class='subtitle'>Machine Learning based Employee Leave Prediction System</div>",
-    unsafe_allow_html=True
-)
-
-st.divider()
+        st.write("Predicted Price:", prediction[0])
 
 
-st.sidebar.title("About Project")
+# ---------------- LOGISTIC REGRESSION ----------------
 
-st.sidebar.info(
-"""
-Employee Attrition Prediction
+elif model_name == "Logistic Regression":
 
-✔ Random Forest Algorithm
+    st.subheader("Logistic Regression")
 
-✔ Machine Learning Model
+    mean_radius = st.number_input("Mean Radius", value=14.0)
+    mean_texture = st.number_input("Mean Texture", value=20.0)
+    mean_perimeter = st.number_input("Mean Perimeter", value=90.0)
+    mean_area = st.number_input("Mean Area", value=600.0)
+    mean_smoothness = st.number_input("Mean Smoothness", value=0.1)
+    mean_compactness = st.number_input("Mean Compactness", value=0.1)
+    mean_concavity = st.number_input("Mean Concavity", value=0.1)
+    mean_concave_points = st.number_input("Mean Concave Points", value=0.05)
+    mean_symmetry = st.number_input("Mean Symmetry", value=0.18)
+    mean_fractal_dimension = st.number_input("Mean Fractal Dimension", value=0.06)
 
-✔ Streamlit Application
+    radius_error = st.number_input("Radius Error", value=0.4)
+    texture_error = st.number_input("Texture Error", value=1.0)
+    perimeter_error = st.number_input("Perimeter Error", value=2.5)
+    area_error = st.number_input("Area Error", value=40.0)
+    smoothness_error = st.number_input("Smoothness Error", value=0.007)
+    compactness_error = st.number_input("Compactness Error", value=0.02)
+    concavity_error = st.number_input("Concavity Error", value=0.02)
+    concave_points_error = st.number_input("Concave Points Error", value=0.01)
+    symmetry_error = st.number_input("Symmetry Error", value=0.02)
+    fractal_dimension_error = st.number_input("Fractal Dimension Error", value=0.003)
 
-✔ Python Based Project
-"""
-)
+    worst_radius = st.number_input("Worst Radius", value=16.0)
+    worst_texture = st.number_input("Worst Texture", value=25.0)
+    worst_perimeter = st.number_input("Worst Perimeter", value=105.0)
+    worst_area = st.number_input("Worst Area", value=800.0)
+    worst_smoothness = st.number_input("Worst Smoothness", value=0.13)
+    worst_compactness = st.number_input("Worst Compactness", value=0.25)
+    worst_concavity = st.number_input("Worst Concavity", value=0.3)
+    worst_concave_points = st.number_input("Worst Concave Points", value=0.12)
+    worst_symmetry = st.number_input("Worst Symmetry", value=0.29)
+    worst_fractal_dimension = st.number_input("Worst Fractal Dimension", value=0.08)
+
+    if st.button("Predict"):
+
+        data = np.array([[
+            mean_radius,
+            mean_texture,
+            mean_perimeter,
+            mean_area,
+            mean_smoothness,
+            mean_compactness,
+            mean_concavity,
+            mean_concave_points,
+            mean_symmetry,
+            mean_fractal_dimension,
+            radius_error,
+            texture_error,
+            perimeter_error,
+            area_error,
+            smoothness_error,
+            compactness_error,
+            concavity_error,
+            concave_points_error,
+            symmetry_error,
+            fractal_dimension_error,
+            worst_radius,
+            worst_texture,
+            worst_perimeter,
+            worst_area,
+            worst_smoothness,
+            worst_compactness,
+            worst_concavity,
+            worst_concave_points,
+            worst_symmetry,
+            worst_fractal_dimension
+        ]])
+
+        data = logistic_scaler.transform(data)
+        prediction = logistic_model.predict(data)
+
+        st.write("Prediction:", prediction[0])
 
 
-left, right = st.columns(2)
+# ---------------- KNN ----------------
 
-data = {}
+elif model_name == "KNN":
 
+    st.subheader("KNN")
 
-with left:
-
-    st.subheader("👤 Employee Information")
-
-
-    data["Age"] = st.number_input(
-        "Age",
-        min_value=18,
-        max_value=60,
-        value=30
+    mean_radius = st.number_input("KNN Mean Radius", value=14.0)
+    mean_texture = st.number_input("KNN Mean Texture", value=20.0)
+    mean_perimeter = st.number_input("KNN Mean Perimeter", value=90.0)
+    mean_area = st.number_input("KNN Mean Area", value=600.0)
+    mean_smoothness = st.number_input("KNN Mean Smoothness", value=0.1)
+    mean_compactness = st.number_input("KNN Mean Compactness", value=0.1)
+    mean_concavity = st.number_input("KNN Mean Concavity", value=0.1)
+    mean_concave_points = st.number_input("KNN Mean Concave Points", value=0.05)
+    mean_symmetry = st.number_input("KNN Mean Symmetry", value=0.18)
+    mean_fractal_dimension = st.number_input(
+        "KNN Mean Fractal Dimension", value=0.06
     )
 
-
-    data["BusinessTravel"] = st.selectbox(
-        "Business Travel",
-        [
-            "Non-Travel",
-            "Travel_Rarely",
-            "Travel_Frequently"
-        ]
+    radius_error = st.number_input("KNN Radius Error", value=0.4)
+    texture_error = st.number_input("KNN Texture Error", value=1.0)
+    perimeter_error = st.number_input("KNN Perimeter Error", value=2.5)
+    area_error = st.number_input("KNN Area Error", value=40.0)
+    smoothness_error = st.number_input("KNN Smoothness Error", value=0.007)
+    compactness_error = st.number_input("KNN Compactness Error", value=0.02)
+    concavity_error = st.number_input("KNN Concavity Error", value=0.02)
+    concave_points_error = st.number_input(
+        "KNN Concave Points Error", value=0.01
+    )
+    symmetry_error = st.number_input("KNN Symmetry Error", value=0.02)
+    fractal_dimension_error = st.number_input(
+        "KNN Fractal Dimension Error", value=0.003
     )
 
-
-    data["DailyRate"] = st.number_input(
-        "Daily Rate",
-        value=800
+    worst_radius = st.number_input("KNN Worst Radius", value=16.0)
+    worst_texture = st.number_input("KNN Worst Texture", value=25.0)
+    worst_perimeter = st.number_input("KNN Worst Perimeter", value=105.0)
+    worst_area = st.number_input("KNN Worst Area", value=800.0)
+    worst_smoothness = st.number_input("KNN Worst Smoothness", value=0.13)
+    worst_compactness = st.number_input("KNN Worst Compactness", value=0.25)
+    worst_concavity = st.number_input("KNN Worst Concavity", value=0.3)
+    worst_concave_points = st.number_input(
+        "KNN Worst Concave Points", value=0.12
+    )
+    worst_symmetry = st.number_input("KNN Worst Symmetry", value=0.29)
+    worst_fractal_dimension = st.number_input(
+        "KNN Worst Fractal Dimension", value=0.08
     )
 
+    if st.button("Predict"):
 
-    data["Department"] = st.selectbox(
-        "Department",
-        [
-            "Sales",
-            "Research & Development",
-            "Human Resources"
-        ]
+        data = np.array([[
+            mean_radius,
+            mean_texture,
+            mean_perimeter,
+            mean_area,
+            mean_smoothness,
+            mean_compactness,
+            mean_concavity,
+            mean_concave_points,
+            mean_symmetry,
+            mean_fractal_dimension,
+            radius_error,
+            texture_error,
+            perimeter_error,
+            area_error,
+            smoothness_error,
+            compactness_error,
+            concavity_error,
+            concave_points_error,
+            symmetry_error,
+            fractal_dimension_error,
+            worst_radius,
+            worst_texture,
+            worst_perimeter,
+            worst_area,
+            worst_smoothness,
+            worst_compactness,
+            worst_concavity,
+            worst_concave_points,
+            worst_symmetry,
+            worst_fractal_dimension
+        ]])
+
+        data = knn_scaler.transform(data)
+        prediction = knn_model.predict(data)
+
+        st.write("Prediction:", prediction[0])
+
+
+# ---------------- NAIVE BAYES ----------------
+
+elif model_name == "Naive Bayes":
+
+    st.subheader("Naive Bayes")
+
+    mean_radius = st.number_input("NB Mean Radius", value=14.0)
+    mean_texture = st.number_input("NB Mean Texture", value=20.0)
+    mean_perimeter = st.number_input("NB Mean Perimeter", value=90.0)
+    mean_area = st.number_input("NB Mean Area", value=600.0)
+    mean_smoothness = st.number_input("NB Mean Smoothness", value=0.1)
+    mean_compactness = st.number_input("NB Mean Compactness", value=0.1)
+    mean_concavity = st.number_input("NB Mean Concavity", value=0.1)
+    mean_concave_points = st.number_input("NB Mean Concave Points", value=0.05)
+    mean_symmetry = st.number_input("NB Mean Symmetry", value=0.18)
+    mean_fractal_dimension = st.number_input(
+        "NB Mean Fractal Dimension", value=0.06
     )
 
-
-    data["DistanceFromHome"] = st.number_input(
-        "Distance From Home",
-        value=5
+    radius_error = st.number_input("NB Radius Error", value=0.4)
+    texture_error = st.number_input("NB Texture Error", value=1.0)
+    perimeter_error = st.number_input("NB Perimeter Error", value=2.5)
+    area_error = st.number_input("NB Area Error", value=40.0)
+    smoothness_error = st.number_input("NB Smoothness Error", value=0.007)
+    compactness_error = st.number_input("NB Compactness Error", value=0.02)
+    concavity_error = st.number_input("NB Concavity Error", value=0.02)
+    concave_points_error = st.number_input(
+        "NB Concave Points Error", value=0.01
+    )
+    symmetry_error = st.number_input("NB Symmetry Error", value=0.02)
+    fractal_dimension_error = st.number_input(
+        "NB Fractal Dimension Error", value=0.003
     )
 
-
-    data["Education"] = st.selectbox(
-        "Education",
-        [1,2,3,4,5]
+    worst_radius = st.number_input("NB Worst Radius", value=16.0)
+    worst_texture = st.number_input("NB Worst Texture", value=25.0)
+    worst_perimeter = st.number_input("NB Worst Perimeter", value=105.0)
+    worst_area = st.number_input("NB Worst Area", value=800.0)
+    worst_smoothness = st.number_input("NB Worst Smoothness", value=0.13)
+    worst_compactness = st.number_input("NB Worst Compactness", value=0.25)
+    worst_concavity = st.number_input("NB Worst Concavity", value=0.3)
+    worst_concave_points = st.number_input(
+        "NB Worst Concave Points", value=0.12
+    )
+    worst_symmetry = st.number_input("NB Worst Symmetry", value=0.29)
+    worst_fractal_dimension = st.number_input(
+        "NB Worst Fractal Dimension", value=0.08
     )
 
-
-    data["EducationField"] = st.selectbox(
-        "Education Field",
-        [
-            "Life Sciences",
-            "Medical",
-            "Marketing",
-            "Technical Degree",
-            "Human Resources",
-            "Other"
-        ]
-    )
-
-
-    data["Gender"] = st.selectbox(
-        "Gender",
-        [
-            "Male",
-            "Female"
-        ]
-    )
-
-
-    data["JobRole"] = st.selectbox(
-        "Job Role",
-        [
-            "Sales Executive",
-            "Research Scientist",
-            "Laboratory Technician",
-            "Manufacturing Director",
-            "Healthcare Representative",
-            "Manager",
-            "Sales Representative",
-            "Research Director",
-            "Human Resources"
-        ]
-    )
-
-
-with right:
-
-    st.subheader("💼 Job Information")
-
-
-    data["JobLevel"] = st.selectbox(
-        "Job Level",
-        [1,2,3,4,5]
-    )
-
-
-    data["JobSatisfaction"] = st.selectbox(
-        "Job Satisfaction",
-        [1,2,3,4]
-    )
-
-
-    data["MaritalStatus"] = st.selectbox(
-        "Marital Status",
-        [
-            "Single",
-            "Married",
-            "Divorced"
-        ]
-    )
-
-
-    data["MonthlyIncome"] = st.number_input(
-        "Monthly Income",
-        value=5000
-    )
-
-
-    data["NumCompaniesWorked"] = st.number_input(
-        "Number of Companies Worked",
-        value=2
-    )
-
-
-    data["OverTime"] = st.selectbox(
-        "Over Time",
-        [
-            "Yes",
-            "No"
-        ]
-    )
-
-
-    data["PercentSalaryHike"] = st.number_input(
-        "Percent Salary Hike",
-        value=15
-    )
-
-
-    data["PerformanceRating"] = st.selectbox(
-        "Performance Rating",
-        [1,2,3,4]
-    )
-
-
-    data["YearsAtCompany"] = st.number_input(
-        "Years At Company",
-        value=5
-    )
-
-
-    data["YearsInCurrentRole"] = st.number_input(
-        "Years In Current Role",
-        value=3
-    )
-
-
-input_df = pd.DataFrame([data])
-
-
-if st.button("🔮 Predict Attrition"):
-
-
-    processed_df = input_df.copy()
-
-
-    for col in columns:
-
-        if col not in processed_df.columns:
-            processed_df[col] = 0
-
-
-    processed_df = processed_df[columns]
-
-
-    for col in processed_df.columns:
-
-        if col in encoders:
-
-            try:
-
-                processed_df[col] = encoders[col].transform(
-                    processed_df[col].astype(str)
-                )
-
-            except Exception:
-
-                processed_df[col] = 0
-
-
-
-    for col in processed_df.columns:
-
-        processed_df[col] = pd.to_numeric(
-            processed_df[col],
-            errors="coerce"
-        )
-
-
-    processed_df = processed_df.fillna(0)
-
-
-
-    input_scaled = scaler.transform(processed_df)
-
-
-    prediction = model.predict(input_scaled)
-
-
-    probability = model.predict_proba(input_scaled)[0][1]
-
-
-
-    st.divider()
-
-
-    if prediction[0] == 1:
-
-
-        st.error(
-            "⚠ Employee is likely to leave the company"
-        )
-
-
-        st.metric(
-            "Attrition Probability",
-            f"{probability*100:.2f}%"
-        )
-
-
-    else:
-
-
-        st.success(
-            "✅ Employee is likely to stay in the company"
-        )
-
-
-        st.metric(
-            "Retention Probability",
-            f"{(1-probability)*100:.2f}%"
-        )
-
-
-    with st.expander("📌 Model Information"):
-
-        st.write(
-        """
-        **Algorithm:** Random Forest Classifier
-
-        **Project:** Employee Attrition Prediction
-
-        **Technology Used:**
-        - Python
-        - Pandas
-        - Scikit-Learn
-        - Streamlit
-        - Joblib
-        """
-        )
-
-
-    with st.expander("👀 View Employee Data"):
-
-        st.dataframe(input_df)
-
-
-    report = pd.DataFrame(
-        {
-            "Feature": processed_df.columns,
-            "Value": processed_df.iloc[0].values
-        }
-    )
-
-
-    csv = report.to_csv(index=False)
-
-
-    st.download_button(
-        label="⬇ Download Prediction Report",
-        data=csv,
-        file_name="Employee_Attrition_Report.csv",
-        mime="text/csv"
-    )
-
-
-
-else:
-
-    st.info(
-        "Click Predict Attrition button to generate result."
-    )
-
-
-st.divider()
-
-st.markdown(
-"""
-<center>
-
-<h4>Employee Attrition Prediction System</h4>
-
-<p>
-Developed using Machine Learning & Streamlit
-</p>
-
-</center>
-""",
-unsafe_allow_html=True
-)
+    if st.button("Predict"):
+
+        data = np.array([[
+            mean_radius,
+            mean_texture,
+            mean_perimeter,
+            mean_area,
+            mean_smoothness,
+            mean_compactness,
+            mean_concavity,
+            mean_concave_points,
+            mean_symmetry,
+            mean_fractal_dimension,
+            radius_error,
+            texture_error,
+            perimeter_error,
+            area_error,
+            smoothness_error,
+            compactness_error,
+            concavity_error,
+            concave_points_error,
+            symmetry_error,
+            fractal_dimension_error,
+            worst_radius,
+            worst_texture,
+            worst_perimeter,
+            worst_area,
+            worst_smoothness,
+            worst_compactness,
+            worst_concavity,
+            worst_concave_points,
+            worst_symmetry,
+            worst_fractal_dimension
+        ]])
+
+        data = naive_scaler.transform(data)
+        prediction = naive_model.predict(data)
+
+        st.write("Prediction:", prediction[0])
